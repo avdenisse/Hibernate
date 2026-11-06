@@ -1,4 +1,5 @@
 package org.example.practicahibernate.database;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -10,28 +11,30 @@ public class JPAUtil {
     private static EntityManagerFactory entityManagerFactory;
 
     public static synchronized void iniciar() {
-        String password = null;
         if (entityManagerFactory == null) {
-            password = System.getenv("DB_PASSWORD");
+            String password = System.getenv("DB_PASSWORD");
+
             if (password == null || password.isEmpty()) {
-                throw new RuntimeException("DB_PASSWORD environment variable is not set or empty.");
+                throw new RuntimeException(
+                        "La variable de entorno DB_PASSWORD no está configurada."
+                );
             }
 
+            Map<String, String> properties = new HashMap<>();
+            properties.put("jakarta.persistence.jdbc.password", password);
+
+            entityManagerFactory =
+                    Persistence.createEntityManagerFactory("bibliotecaPU", properties);
         }
-        Map<String, String> properties = new HashMap<>();
-        properties.put("jakarta.persistence.jdbc.password", password);
-        entityManagerFactory = Persistence.createEntityManagerFactory
-                ("bibliotecaPU", properties);
-
     }
 
-    public static EntityManagerFactory getEntityManager() {
+    public static EntityManager getEntityManager() {
         iniciar();
-        return entityManagerFactory.createEntityManager().getEntityManagerFactory();
+        return entityManagerFactory.createEntityManager();
     }
 
-    public static synchronized void cerrar(){
-        if(entityManagerFactory != null && entityManagerFactory.isOpen()){
+    public static synchronized void cerrar() {
+        if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
             entityManagerFactory.close();
             entityManagerFactory = null;
         }

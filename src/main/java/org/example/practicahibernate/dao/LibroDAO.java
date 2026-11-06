@@ -8,7 +8,7 @@ import static org.example.practicahibernate.database.JPAUtil.getEntityManager;
 import java.util.List;
 public class LibroDAO {
     public void guardar(Libro libro){
-        EntityManager em = getEntityManager().createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try{
             //Iniciar la transaccion en PostgreSQL
@@ -29,7 +29,7 @@ public class LibroDAO {
 
 
     public List<Libro> listar(){
-        EntityManager em = getEntityManager().createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         try{
             return em.createQuery("SELECT l FROM Libro l", Libro.class).getResultList();
         }finally {
@@ -38,7 +38,7 @@ public class LibroDAO {
     }
 
     public static boolean modificar(Libro libro){
-        EntityManager em = getEntityManager().createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
 
         try{
@@ -66,7 +66,7 @@ public class LibroDAO {
     }
 
     public boolean eliminar(Long id){
-        EntityManager em = getEntityManager().createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction tx = em.getTransaction();
         try{
             tx.begin();
